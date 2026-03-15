@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Sign Up</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Left Side - Brand -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <div class="logo-container">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/>
+                            </svg>
+                        </div>
+                        <span class="logo-text">nexus</span>
+                    </div>
+                </div>
+                <h1 class="brand-title">
+                    Be part of<br>
+                    <span>something bigger.</span>
+                </h1>
+                <h2 class="brand-subtitle">Start your journey today.</h2>
+                
+                <div class="feature-pills">
+                    <span class="pill"><i>✦</i> Free forever</span>
+                    <span class="pill"><i>✦</i> No ads</span>
+                    <span class="pill"><i>✦</i> Your data</span>
+                    <span class="pill"><i>✦</i> Real connections</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Auth -->
+        <div class="auth-section">
+            <div class="auth-content">
+                <div class="auth-header">
+                    <h2>Create account</h2>
+                    <p>Get started with Nexus</p>
+                </div>
+
+                <form id="registerForm">
+                    <div class="form-group">
+                        <input type="text" id="username" class="form-input" placeholder="Choose a username" required>
+                        <div id="usernameError" class="field-error hidden"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                        <div id="emailError" class="field-error hidden"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="password" class="form-input" placeholder="Create a password" required>
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="passwordError" class="field-error hidden"></div>
+                        
+                        <!-- Password Conditions Checklist -->
+                        <div class="password-conditions" id="passwordConditions">
+                            <div class="condition-item" id="condLength">
+                                <span class="condition-check"></span>
+                                <span class="condition-text">At least 8 characters</span>
+                            </div>
+                            <div class="condition-item" id="condUppercase">
+                                <span class="condition-check"></span>
+                                <span class="condition-text">At least one uppercase letter</span>
+                            </div>
+                            <div class="condition-item" id="condNumber">
+                                <span class="condition-check"></span>
+                                <span class="condition-text">At least one number</span>
+                            </div>
+                            <div class="condition-item" id="condSpecial">
+                                <span class="condition-check"></span>
+                                <span class="condition-text">At least one special character (!@#$%^&*)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm password" required>
+                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="confirmError" class="field-error hidden"></div>
+                    </div>
+
+                    <!-- Terms Checkbox -->
+                    <div class="terms-checkbox">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="termsCheckbox">
+                            <span class="checkmark"></span>
+                            <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Create account</button>
+                </form>
+
+                <div class="divider">
+                    <span class="divider-line"></span>
+                    <span>Already a member?</span>
+                    <span class="divider-line"></span>
+                </div>
+
+                <a href="index.html" class="btn btn-secondary">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/register.js"></script>
+</body>
+</html>

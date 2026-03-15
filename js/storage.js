@@ -1,0 +1,109 @@
+/**
+ * Nexus Social - Storage Management
+ */
+
+// Define STORAGE_KEYS first (before it's used)
+const STORAGE_KEYS = {
+    USERS: 'nexus_users',
+    CURRENT_USER: 'nexus_current_user',
+    POSTS: 'nexus_posts'
+};
+
+// Initialize storage
+function initializeStorage() {
+    if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify([]));
+    }
+    if (!localStorage.getItem(STORAGE_KEYS.POSTS)) {
+        localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify([]));
+    }
+}
+
+// Call initializeStorage after STORAGE_KEYS is defined
+initializeStorage();
+
+// User operations
+function getUsers() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || [];
+}
+
+function saveUsers(users) {
+    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+}
+
+function createUser(userData) {
+    const users = getUsers();
+    
+    if (users.some(u => u.email === userData.email)) {
+        throw new Error('Email already registered');
+    }
+    
+    if (users.some(u => u.username === userData.username)) {
+        throw new Error('Username already taken');
+    }
+    
+    const newUser = {
+        id: Date.now().toString(),
+        username: userData.username,
+        email: userData.email,
+        password: btoa(userData.password),
+        bio: '',
+        profilePic: '',
+        createdAt: new Date().toISOString()
+    };
+    
+    users.push(newUser);
+    saveUsers(users);
+    
+    const { password, ...userWithoutPassword } = newUser;
+    return userWithoutPassword;
+}
+
+function validateUser(email, password) {
+    const users = getUsers();
+    const user = users.find(u => u.email === email);
+    
+    if (!user) return null;
+    if (user.password !== btoa(password)) return null;
+    
+    const { password: pwd, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+}
+
+function findUserByEmail(email) {
+    const users = getUsers();
+    return users.find(u => u.email === email);
+}
+
+// Session management
+function setCurrentUser(user) {
+    if (user) {
+        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
+    } else {
+        localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    }
+}
+
+function getCurrentUser() {
+    const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+    return userJson ? JSON.parse(userJson) : null;
+}
+
+function isAuthenticated() {
+    return getCurrentUser() !== null;
+}
+
+function logout() {
+    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+}
+
+// Export
+window.Storage = {
+    createUser,
+    validateUser,
+    findUserByEmail,
+    getCurrentUser,
+    setCurrentUser,
+    isAuthenticated,
+    logout
+};
