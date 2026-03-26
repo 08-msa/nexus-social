@@ -145,13 +145,13 @@ function loadComments() {
 
         const user = users.find(u => u.id === c.userId);
 
-        list.innerHTML += `
-            <div class="comment-item">
-                <strong><a href="profile.html?id=${user.id}" class="username-link">${user ? user.username : "User"}</a></strong>
-                <p>${c.text}</p>
-                <small>${new Date(c.createdAt).toLocaleString()}</small>
-            </div>
-        `;
+      list.innerHTML += `
+    <div class="comment-item">
+        <strong><a href="profile.html?id=${user.id}" class="username-link">${user ? user.username : "User"}</a></strong>
+        <p>${c.content}</p>
+        <small>${new Date(c.createdAt).toLocaleString()}</small>
+    </div>
+`;
     });
 
     if (updated) {

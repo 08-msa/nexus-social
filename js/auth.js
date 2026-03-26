@@ -14,7 +14,18 @@ function showError(message) {
         }, 5000);
     }
 }
+// auth.js
+//added by memeber 4
+// auth.js
+function logout() {
+    localStorage.removeItem('loggedInUser'); // clear auth
+    window.location.href = 'index.html';     // redirect to login
+}
 
+// expose globally
+window.logout = logout;
+// make it globally accessible
+window.logout = logout;
 document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = Storage.isAuthenticated();
     
@@ -24,5 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (protectedPages.includes(currentPage) && !isLoggedIn) {
         window.location.href = 'index.html';
+    }
+    // Logout button //added by memeber 4
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            Storage.logout();
+            window.location.href = 'index.html';
+        });
     }
 });

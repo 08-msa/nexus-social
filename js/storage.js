@@ -109,6 +109,55 @@ function isAuthenticated() {
 function logout() {
     localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
 }
+STORAGE_KEYS.COMMENTS = 'nexus_comments';
+
+// Initialize comments storage
+if (!localStorage.getItem(STORAGE_KEYS.COMMENTS)) {
+    localStorage.setItem(STORAGE_KEYS.COMMENTS, JSON.stringify([]));
+}
+
+// Get all comments
+function getComments() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.COMMENTS)) || [];
+}
+
+// Save all comments
+function saveComments(comments) {
+    localStorage.setItem(STORAGE_KEYS.COMMENTS, JSON.stringify(comments));
+}
+
+// Create a new comment
+function createComment(commentData) {
+    const comments = getComments();
+
+    const newComment = {
+        id: Date.now().toString(),
+        postId: commentData.postId,
+        authorId: commentData.authorId,
+        content: commentData.content,
+        createdAt: new Date().toISOString()
+    };
+
+    comments.push(newComment);
+    saveComments(comments);
+
+    return newComment;
+}
+
+// Get comments for a specific post
+function getCommentsByPost(postId) {
+    const comments = getComments();
+    return comments.filter(c => c.postId === postId);
+}
+
+// Export
+window.Storage = {
+    ...window.Storage,
+    getComments,
+    saveComments,
+    createComment,
+    getCommentsByPost
+};
 //person 4 addition 
 function getUserById(id) {
     const users = getUsers();

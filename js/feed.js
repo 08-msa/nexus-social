@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     else if (currentPage === 'post.html') {
         loadSinglePost();
     }
+    
 });
 
 function loadFeed() {
@@ -166,6 +167,10 @@ function postToHTML(post) {
         </div>
     `;
 }
+function logout() {
+    Storage.logout();          // removes 'loggedInUser' from localStorage
+    window.location.href = 'index.html'; // redirects to login page
+}
 
 function deletePost(postId) {
     // MEMBER 2: Delete post
@@ -179,4 +184,5 @@ function deletePost(postId) {
     else {
         window.location.href = 'feed.html';
     }
+    
 }
