@@ -427,7 +427,7 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     color: var(--text-secondary);
     font-size: 0.9rem;
-    user-select: none;  
+    user-select: none;
 }
 
 .checkbox-container input {
@@ -1465,11 +1465,12 @@ MEMBER 4: Add profile styles here
 /* ===== MEMBER 4: PROFILE PAGE ===== */
 /* ===== PROFILE CONTAINER ===== */
 .profile-container {
-    max-width: 700px;
-    margin: 3rem auto;
-    padding: 0 1.2rem;
+    width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
 }
-
 /* ===== HEADER ===== */
 .profile-header {
     display: flex;
@@ -1683,13 +1684,40 @@ MEMBER 4: Add profile styles here
     .profile-details h1 {
         font-size: 1.5rem;
     }
-}
+}@media (min-width: 1200px) {
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+    }
 
+    .profile-avatar-large {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-details h1 {
+        font-size: 2rem;
+    }
+
+    .profile-bio {
+        font-size: 1.1rem;
+        max-width: 800px; /* keeps text readable */
+    }
+
+    .profile-stats {
+        display: flex;
+        gap: 2.5rem;
+    }
+}
 /* Large screens: extra wide */
 @media (min-width: 1800px) {
     .profile-container {
         max-width: 1000px;
         padding: 0 2rem;
+ 
+    margin: 0 auto;
+
     }
 
     .profile-header {
