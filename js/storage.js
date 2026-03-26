@@ -127,6 +127,36 @@ function updateUser(updatedUser) {
 
     saveUsers(users);
 }
+// POSTS OPERATIONS
+function getPosts() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.POSTS)) || [];
+}
+
+function savePosts(posts) {
+    localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts));
+}
+
+function createPost(postData) {
+    const posts = getPosts();
+    
+    const newPost = {
+        id: Date.now().toString(),
+        content: postData.content,
+        authorId: postData.authorId,   // store user ID
+        createdAt: new Date().toISOString()
+    };
+    
+    posts.push(newPost);
+    savePosts(posts);
+    
+    return newPost;
+}
+
+// Optional: get posts by user
+function getPostsByUser(userId) {
+    const posts = getPosts();
+    return posts.filter(p => p.authorId === userId);
+}
 ///
 // Export
 window.Storage = {
@@ -137,6 +167,10 @@ window.Storage = {
     setCurrentUser,
     isAuthenticated,
     logout,
-    getUserById,     // added by 4
-    updateUser        // added by 4
+    getUserById,     // added by memeber 4
+    updateUser,       // added ....
+    getPosts,         // added ...
+    savePosts,        // added ...
+    createPost,       // added ...
+    getPostsByUser
 };

@@ -50,11 +50,15 @@ document.addEventListener("DOMContentLoaded", () => {
             container.innerHTML = `<p style="color: gray;">No posts yet</p>`;
         } else {
             userPosts.forEach(post => {
+                const date = new Date(post.createdAt);
+                const formattedDate = date.toLocaleString(); // e.g., "3/26/2026, 4:15 PM"
+
                 const div = document.createElement("div");
                 div.className = "post";
                 div.innerHTML = `
                     <p>${post.content}</p>
-                    <small>${post.createdAt || ""}</small>
+                 <small class="post-date">${formattedDate}</small>
+                    
                 `;
                 container.appendChild(div);
             });
@@ -81,18 +85,36 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("editProfileModal").style.display = "flex";
     }
 
-    // ===== SAVE EDIT =====
-    function saveProfileEdit() {
-        profileUser.username = document.getElementById("editUsername").value;
-        profileUser.bio = document.getElementById("editBio").value;
+  // ===== SAVE EDIT =====
+function saveProfileEdit(e) {
+    e.preventDefault(); // prevent form submission reload
 
+    profileUser.username = document.getElementById("editUsername").value;
+    profileUser.bio = document.getElementById("editBio").value;
+
+    const uploadInput = document.getElementById("uploadProfilePic");
+
+    // If a file is uploaded
+    if (uploadInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            profileUser.profilePic = event.target.result; // Base64 image
+            Storage.updateUser(profileUser);
+            Storage.setCurrentUser(profileUser);
+
+            document.getElementById("editProfileModal").style.display = "none";
+            loadProfile();
+        }
+        reader.readAsDataURL(uploadInput.files[0]);
+    } else {
+        // No new image uploaded, just save username/bio
         Storage.updateUser(profileUser);
         Storage.setCurrentUser(profileUser);
 
         document.getElementById("editProfileModal").style.display = "none";
-
         loadProfile();
     }
+}
 
     // ===== CLOSE MODAL =====
     function closeEditProfile() {
@@ -111,4 +133,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ===== RUN =====
     loadProfile();
+    
 });
