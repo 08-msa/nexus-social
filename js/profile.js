@@ -1,86 +1,114 @@
-// ===== GET CURRENT USER =====
-const currentUser = Storage.getCurrentUser();
+document.addEventListener("DOMContentLoaded", () => {
 
-if (!currentUser) {
-    window.location.href = "login.html";
-}
+    // ===== GET CURRENT USER =====
+    const currentUser = Storage.getCurrentUser();
 
-// ===== GET PROFILE USER =====
-const params = new URLSearchParams(window.location.search);
-const profileId = params.get("id");
+    if (!currentUser) {
+        window.location.href = "login.html";
+        return;
+    }
 
-let profileUser = profileId
-    ? Storage.getUserById(profileId)
-    : currentUser;
+    // ===== GET PROFILE USER =====
+    const params = new URLSearchParams(window.location.search);
+    const profileId = params.get("id");
 
-// ===== LOAD PROFILE =====
-function loadProfile() {
+    let profileUser = profileId
+        ? Storage.getUserById(profileId)
+        : currentUser;
+
     if (!profileUser) return;
 
-    document.getElementById("profileUsername").textContent = profileUser.username;
-    document.getElementById("profileBio").textContent =
-        profileUser.bio || "This user hasn't added a bio yet.";
+    // ===== LOAD PROFILE =====
+    function loadProfile() {
 
-    // Avatar
-    const avatar = document.getElementById("profileAvatar");
-    if (profileUser.profilePic) {
-        avatar.style.backgroundImage = `url(${profileUser.profilePic})`;
-        avatar.style.backgroundSize = "cover";
-    } else {
-        avatar.textContent = profileUser.username[0].toUpperCase();
+        document.getElementById("profileUsername").textContent = profileUser.username;
+        document.getElementById("profileBio").textContent =
+            profileUser.bio || "This user hasn't added a bio yet.";
+
+        // Avatar
+        const avatar = document.getElementById("profileAvatar");
+
+        if (profileUser.profilePic) {
+            avatar.style.backgroundImage = `url(${profileUser.profilePic})`;
+            avatar.style.backgroundSize = "cover";
+            avatar.textContent = "";
+        } else {
+            avatar.style.backgroundImage = "";
+            avatar.textContent = profileUser.username[0].toUpperCase();
+        }
+
+        // Posts
+        const posts = JSON.parse(localStorage.getItem("nexus_posts")) || [];
+        const userPosts = posts.filter(p => p.userId == profileUser.id);
+
+        document.getElementById("profilePostsCount").textContent = userPosts.length;
+
+        const container = document.getElementById("userPostsContainer");
+        container.innerHTML = "";
+
+        if (userPosts.length === 0) {
+            container.innerHTML = `<p style="color: gray;">No posts yet</p>`;
+        } else {
+            userPosts.forEach(post => {
+                const div = document.createElement("div");
+                div.className = "post";
+                div.innerHTML = `
+                    <p>${post.content}</p>
+                    <small>${post.createdAt || ""}</small>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Buttons show/hide
+        const editBtn = document.getElementById("editProfileBtn");
+        const followBtn = document.getElementById("followBtn");
+
+        if (currentUser.id == profileUser.id) {
+            editBtn.style.display = "block";
+            followBtn.style.display = "none";
+        } else {
+            editBtn.style.display = "none";
+            followBtn.style.display = "block";
+        }
     }
 
-    // Posts
-    const posts = JSON.parse(localStorage.getItem("nexus_posts")) || [];
-    const userPosts = posts.filter(p => p.userId == profileUser.id);
+    // ===== OPEN MODAL =====
+    function openEditProfile() {
+        document.getElementById("editUsername").value = profileUser.username;
+        document.getElementById("editBio").value = profileUser.bio || "";
 
-    document.getElementById("profilePostsCount").textContent = userPosts.length;
-
-    // Render posts
-    const container = document.getElementById("userPostsContainer");
-    container.innerHTML = "";
-
-    if (userPosts.length === 0) {
-        container.innerHTML = `<p style="color: gray;">No posts yet</p>`;
-    } else {
-        userPosts.forEach(post => {
-            const div = document.createElement("div");
-            div.className = "post";
-            div.innerHTML = `
-                <p>${post.content}</p>
-                <small>${post.createdAt || ""}</small>
-            `;
-            container.appendChild(div);
-        });
+        document.getElementById("editProfileModal").style.display = "flex";
     }
 
-    // ===== BUTTON LOGIC =====
-    const editBtn = document.getElementById("editProfileBtn");
-    const followBtn = document.getElementById("followBtn");
+    // ===== SAVE EDIT =====
+    function saveProfileEdit() {
+        profileUser.username = document.getElementById("editUsername").value;
+        profileUser.bio = document.getElementById("editBio").value;
 
-    if (currentUser.id == profileUser.id) {
-        editBtn.style.display = "block";
-        followBtn.style.display = "none";
-    } else {
-        editBtn.style.display = "none";
-        followBtn.style.display = "block";
+        Storage.updateUser(profileUser);
+        Storage.setCurrentUser(profileUser);
+
+        document.getElementById("editProfileModal").style.display = "none";
+
+        loadProfile();
     }
-}
 
-// ===== EDIT PROFILE =====
-document.getElementById("editProfileBtn").addEventListener("click", () => {
-    let newUsername = prompt("Edit username:", profileUser.username);
-    let newBio = prompt("Edit bio:", profileUser.bio);
+    // ===== CLOSE MODAL =====
+    function closeEditProfile() {
+        document.getElementById("editProfileModal").style.display = "none";
+    }
 
-    if (newUsername) profileUser.username = newUsername;
-    if (newBio) profileUser.bio = newBio;
+    // ===== BUTTON EVENTS =====
+    document.getElementById("editProfileBtn")
+        ?.addEventListener("click", openEditProfile);
 
-    // Use Storage instead of manual localStorage
-    Storage.updateUser(profileUser);
-    Storage.setCurrentUser(profileUser);
+    document.getElementById("saveProfileBtn")
+        ?.addEventListener("click", saveProfileEdit);
 
+    document.getElementById("closeProfileBtn")
+        ?.addEventListener("click", closeEditProfile);
+
+    // ===== RUN =====
     loadProfile();
 });
-
-// ===== RUN =====
-loadProfile();
