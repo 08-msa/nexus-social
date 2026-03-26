@@ -22,6 +22,16 @@ function initializeStorage() {
 // Call initializeStorage after STORAGE_KEYS is defined
 initializeStorage();
 
+//  Add Followers/FollowingTO existing users ===== person 4
+let users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || [];
+
+users = users.map(user => ({
+    followers: [],
+    following: [],
+    ...user
+}));////
+
+localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 // User operations
 function getUsers() {
     return JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS)) || [];
@@ -49,6 +59,9 @@ function createUser(userData) {
         password: btoa(userData.password),
         bio: '',
         profilePic: '',
+        // added by person 4
+        followers: [],
+        following: [], //
         createdAt: new Date().toISOString()
     };
     
@@ -96,7 +109,25 @@ function isAuthenticated() {
 function logout() {
     localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
 }
+//person 4 addition 
+function getUserById(id) {
+    const users = getUsers();
+    return users.find(u => u.id == id);
+}
 
+function updateUser(updatedUser) {
+    let users = getUsers();
+
+    users = users.map(user => {
+        if (user.id == updatedUser.id) {
+            return { ...user, ...updatedUser };
+        }
+        return user;
+    });
+
+    saveUsers(users);
+}
+///
 // Export
 window.Storage = {
     createUser,
@@ -105,5 +136,7 @@ window.Storage = {
     getCurrentUser,
     setCurrentUser,
     isAuthenticated,
-    logout
+    logout,
+    getUserById,     // added by 4
+    updateUser        // added by 4
 };
